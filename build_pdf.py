@@ -1,13 +1,12 @@
-import os, sys, commands
-
-#sys.path.append('/home/aconbere/Projects/django_projects/')
-#os.environ['DJANGO_SETTINGS_MODULE'] = 'blog.settings'
-
 from django.contrib.auth.models import User
 from django.template import Context, Template, loader
 from django.conf import settings
-from blog.resume.models import Education, WorkExperience, SkillHeading, UserProfile, Project
-from blog.bravura.models import Project as BravuraProject
+from models import Education, WorkExperience, SkillHeading, UserProfile, Project
+
+import os
+import sys
+import commands
+import resume_settings
 
                 
 def build_pdf(profile=None, file_name=None, debug=False):
@@ -21,22 +20,21 @@ def build_pdf(profile=None, file_name=None, debug=False):
         project_list = Project.objects.filter(profile__name = profile).order_by('-start_date')
         education_list = Education.objects.filter(profile__name = profile).order_by('-start_date')
         experience_list = WorkExperience.objects.filter(profile__name = profile).order_by('-start_date')
-        skillheading_list = SkillHeading.objects.filter(profile__name = profile)
+        skillheading_list = SkillHeading.objects.filter(profile__name = profile).order_by('name')
     else:   
         project_list = Project.objects.order_by('-start_date')
         education_list = Education.objects.order_by('-start_date')
         experience_list = WorkExperience.objects.order_by('-start_date')
-        skillheading_list = SkillHeading.objects.all()
+        skillheading_list = SkillHeading.objects.order_by('name')
         
-    user = User.objects.get(username="aconbere")
-    user_profile = UserProfile.objects.get(user__username="aconbere")
+    user = User.objects.get(username=resume_settings.ResumeUser)
 
     latex_context = Context({'project_list': project_list,
                'education_list': education_list,
                'experience_list': experience_list,
                'skillheading_list': skillheading_list,
                'user': user,
-               'user_profile': user_profile,
+               'user_profile': user.get_profile(),
                'profile': profile,
                })
 

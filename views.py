@@ -14,9 +14,9 @@ def render_with_request(request, template, context):
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 def resume(request):
-    education_list = Education.objects.all()
+    education_list = Education.objects.order_by('-start_date')
     experience_list = WorkExperience.objects.order_by('-start_date')
-    skillheading_list = SkillHeading.objects.all()
+    skillheading_list = SkillHeading.objects.order_by('name')
     user = User.objects.get(username=resume_settings.RESUME_USER)
 
     context = {'education_list': education_list,
