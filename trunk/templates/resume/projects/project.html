@@ -1,0 +1,14 @@
+{% extends 'resume/base.html' %}
+
+{% block extrastyle %}<link rel="stylesheet" type="text/css" media="screen" href="{{ media_url }}/resume/base.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="{{ media_url }}/resume/resume.css" />{% endblock %}
+
+{% block content %}
+
+{% if project.link %}
+<h4><a href="{{ project.link }}">{{ project.name }}</a></h4>
+{% else %}
+<h4>{{ project.name }}</h4>
+{% endif %}
+<p>{{ project.description }}</p>
+{% endblock %}

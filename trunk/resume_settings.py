@@ -1,0 +1,1 @@
+RESUME_USER = "some_user"
