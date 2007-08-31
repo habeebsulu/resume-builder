@@ -4,11 +4,10 @@ from models import CourseWork, Education, WorkExperience, Project, Responsibilit
 from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.conf import settings
+from build_pdf import build_pdf
 
 import resume_settings
 import datetime
-
-from build_pdf import build_pdf
 
 def render_with_request(request, template, context):
     return render_to_response(template, context, context_instance=RequestContext(request))
