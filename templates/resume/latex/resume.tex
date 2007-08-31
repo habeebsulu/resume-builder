@@ -1,0 +1,83 @@
+{% load filter %}
+% resume.tex
+
+\documentclass[11pt]{article}
+\usepackage{fullpage}
+\usepackage{fancyhdr}
+\usepackage[pdftex]{hyperref}
+\hypersetup{colorlinks=true}
+\textheight=10.2in
+%\pagestyle{empty}
+\pagestyle{fancy}
+\addtolength{\topmargin}{-1cm}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+\addtolength{\headheight}{56pt}
+\addtolength{\headsep}{.3in}
+
+\lhead{
+\begin{tabular*}{6.5in}{l@{\extracolsep{\fill}}r}
+\textbf{% templatetag openbrace %}{{ user.first_name }} {{ user.last_name }}{% templatetag closebrace %}  & \\
+{{ user_profile.address.street }} & {{ user_profile.address.phone }}\\
+{{ user_profile.address.city }}, {{ user_profile.address.province }} {{ user_profile.address.zipcode }} & {{ user.email }} \\
+\end{tabular*}
+}
+%\\
+\begin{document}
+
+\section*{Education}
+\begin{itemize}
+{% for education in education_list %}
+    \item[] 
+	\begin{tabular*}{6in}{l@{\extracolsep{\fill}}r}
+		\textbf{% templatetag openbrace %}{{ education.name }}{% templatetag closebrace %} & {{ education.location.city }}, {{ education.location.province }}\\
+		{{ education.degree }} {% if education.minor %}(Minor in {{ education.minor }}) {% endif %}&  {{ education.start_date|date:"F, Y" }} - {{ education.end_date|date:"F, Y" }}
+	\end{tabular*}
+	
+	{{ education.description }}
+{% endfor %}
+\end{itemize}
+
+\section*{Relevant Projects}
+\begin{itemize}
+{% for project in project_list %}
+    \item[]
+    \begin{tabular*}{6in}{l@{\extracolsep{\fill}}r}
+        \textbf{% templatetag openbrace %}\href{% templatetag openbrace %}{{ project.link }}{% templatetag closebrace %}{% templatetag openbrace %}{{ project.name }}{% templatetag closebrace %}{% templatetag closebrace %} & {{ project.start_date|date:"F, Y" }} - {% if project.end_date %}{{ project.end_date|date:"F, Y" }}{% else %}Present{% endif %}
+    \end{tabular*}
+    {{ project.description }}
+{% endfor %}
+\end{itemize}
+
+\pagebreak
+
+{\large \textbf{Skill Sets}}
+
+\begin{itemize}
+{% for skillheading in skillheading_list %}
+    \item[]
+    \begin{tabular*}{6in}{l@{\extracolsep{\fill}}r}
+        \textbf{% templatetag openbrace %}{{ skillheading.name }}: {% templatetag closebrace %} \\
+        {% for skill in skillheading.skill_set|profile_filter:profile %}{{ skill.name }}, {% endfor %}\\
+    \end{tabular*}
+{% endfor %}
+\end{itemize}
+
+{\large \textbf{Work History}}
+\begin{itemize}
+{% for experience in experience_list %}
+    \item[]
+    	\begin{tabular*}{6in}{l@{\extracolsep{\fill}}r}
+    		\textbf{% templatetag openbrace %}{{ experience.title }}{% templatetag closebrace %} & {{ experience.start_date|date:"F, Y" }} - {{ experience.end_date|date:"F, Y" }}\\
+    		{{ experience.name }} & {{ experience.location }}\\
+    	\end{tabular*}
+
+    	\begin{itemize}
+    	    {% for responsibility in experience.responsibility_set|profile_filter:profile %}
+    		\item {{ responsibility.description }}
+    		{% endfor %}
+    	\end{itemize}
+{% endfor %}
+\end{itemize}
+\end{document}
