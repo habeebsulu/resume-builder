@@ -30,7 +30,7 @@ class Skill(models.Model):
     profile = models.ManyToManyField('ResumeProfile', blank=True)
     
     added = models.DateTimeField(blank=True, null=True)
-    updated = models.DateTileField(blank=True, null=True)
+    updated = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return self.skill_heading.name + ": " + self.name
@@ -55,7 +55,7 @@ class Project(models.Model):
     profile = models.ManyToManyField('ResumeProfile', blank=True)
     
     added = models.DateTimeField(blank=True, null=True)
-    updated = models.DateTileField(blank=True, null=True)
+    updated = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -82,7 +82,7 @@ class WorkExperience(models.Model):
     profile = models.ManyToManyField('ResumeProfile', blank=True)
     
     added = models.DateTimeField(blank=True, null=True)
-    updated = models.DateTileField(blank=True, null=True)
+    updated = models.DateTimeField(blank=True, null=True)
     
     def get_responsibilities(self):
         if self.profile:
@@ -110,7 +110,7 @@ class Responsibility(models.Model):
     profile = models.ManyToManyField('ResumeProfile', blank=True)
     
     added = models.DateTimeField(blank=True, null=True)
-    updated = models.DateTileField(blank=True, null=True)
+    updated = models.DateTimeField(blank=True, null=True)
     
     def __str__(self):
         return self.work_experience.name + ": " + self.description[:50] + "..."
@@ -138,7 +138,7 @@ class Education(models.Model):
     profile = models.ManyToManyField('ResumeProfile', blank=True)
     
     added = models.DateTimeField(blank=True, null=True)
-    updated = models.DateTileField(blank=True, null=True)
+    updated = models.DateTimeField(blank=True, null=True)
     
     def __str__(self):
         return self.name
@@ -159,9 +159,9 @@ class CourseWork(models.Model):
     description = models.TextField(blank=True)
     education = models.ForeignKey(Education)
     profile = models.ManyToManyField('ResumeProfile', blank=True)
-    
+        
     added = models.DateTimeField(blank=True, null=True)
-    updated = models.DateTileField(blank=True, null=True)
+    updated = models.DateTimeField(blank=True, null=True)
     
     def __str__(self):
         return self.name
@@ -195,7 +195,7 @@ class UserProfile(models.Model):
     user = models.ForeignKey(User)
     address = models.ForeignKey(ContactInfo)
     current_activities = models.TextField()
-    bio = models.TextField()
+    bio = models.TextField(blank=True)
     profile = models.ManyToManyField('ResumeProfile', blank=True)
 
     def __str__(self):

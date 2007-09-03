@@ -17,40 +17,43 @@ def resume(request):
     experience_list = WorkExperience.objects.order_by('-start_date')
     skillheading_list = SkillHeading.objects.order_by('name')
     user = User.objects.get(username=resume_settings.RESUME_USER)
+    user_profile = UserProfile.objects.get(user=user)
 
     context = {'education_list': education_list,
                'experience_list': experience_list,
                'skillheading_list': skillheading_list,
                'user': user,
-               'user_profile': user.get_profile(),
+               'user_profile': user_profile,
                }
-    return render_with_request(request, 'resume/resume.html', context)
+    return render_with_request(request, 'resume-builder/resume_html.html', context)
 
 def projects(request):
     project_list = Project.objects.all()
     user = User.objects.get(username=resume_settings.RESUME_USER)
+    user_profile = UserProfile.objects.get(user=user)
     
     context = {'project_list': project_list,
                'user': user,
-               'user_profile': user.get_profile(),
+               'user_profile': user_profile,
                }
-    return render_with_request(request, 'resume/projects/index.html', context)
+    return render_with_request(request, 'resume-builder/projects/index.html', context)
 
 def project_details(request, project_slug):
     project = Project.objects.get(slug=project_slug)
     user = User.objects.get(username=resume_settings.RESUME_USER)
+    user_profile = UserProfile.objects.get(user=user)
     
     context = {'project': project,
                'user': user,
-               'user_profile': user.get_profile(),
+               'user_profile': user_profile,
                }
-    return render_with_request(request, 'resume/projects/project.html', context)
+    return render_with_request(request, 'resume-builder/projects/project.html', context)
 
 def render_pdf(request, profile=None):
     timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
     file_name = 'resume'
     pdf_file = file_name + '.pdf'
     tex_file = file_name + '.tex'
-    pdf_url = '%s/resume/pdf/latex%s' % (settings.MEDIA_URL, pdf_file,)
+    pdf_url = '%s/resume-builder/pdf/latex%s' % (settings.MEDIA_URL, pdf_file,)
     build_pdf(file_name=tex_file, profile=profile, debug=True)
     return HttpResponseRedirect(pdf_url)
