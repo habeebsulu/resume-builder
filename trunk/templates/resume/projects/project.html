@@ -1,0 +1,10 @@
+{% extends 'resume-builder/base.html' %}
+
+{% block content %}
+{% if project.link %}
+<h4><a href="{{ project.link }}">{{ project.name }}</a></h4>
+{% else %}
+<h4>{{ project.name }}</h4>
+{% endif %}
+{{ project.description|linebreaks }}
+{% endblock %}
