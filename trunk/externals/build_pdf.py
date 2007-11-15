@@ -1,12 +1,12 @@
 from django.contrib.auth.models import User
 from django.template import Context, Template, loader
 from django.conf import settings
-from models import Education, WorkExperience, SkillHeading, UserProfile, Project
+from blog.resume.models import Education, WorkExperience, SkillHeading, UserProfile, Project
 
 import os
 import sys
 import commands
-import resume_settings
+import blog.resume.resume_settings
 
                 
 def build_pdf(profile=None, file_name=None, debug=False):

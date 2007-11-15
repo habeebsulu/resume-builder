@@ -5,16 +5,9 @@ class SkillHeading(models.Model):
     name = models.CharField(maxlength=100)
     slug = models.SlugField(prepopulate_from=('name',))
     description = models.TextField(blank=True)
-    profile = models.ManyToManyField('ResumeProfile', blank=True)
 
     def __str__(self):
         return self.name
-
-    def get_skills(self):
-        if self.profile:
-            return self.skill_set.filter(profile__name = self.profile)
-        else:
-            return self.skill_set.all()
 
     class Admin:
         pass
@@ -27,7 +20,7 @@ class Skill(models.Model):
     skill_heading = models.ForeignKey(SkillHeading)
     projects = models.ManyToManyField('Project', null=True, blank=True)
     experience = models.CharField(maxlength=200)
-    profile = models.ManyToManyField('ResumeProfile', blank=True)
+    order = models.SmallIntegerField(default=1)
     
     added = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
@@ -52,7 +45,7 @@ class Project(models.Model):
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
     description = models.TextField(blank=True)
-    profile = models.ManyToManyField('ResumeProfile', blank=True)
+    order = models.SmallIntegerField(default=1)
     
     added = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
@@ -79,17 +72,10 @@ class WorkExperience(models.Model):
     end_date = models.DateField(blank=True)
     description = models.TextField(blank=True)
     location = models.ForeignKey('ContactInfo')
-    profile = models.ManyToManyField('ResumeProfile', blank=True)
     
-    added = models.DateTimeField(blank=True, null=True)
-    updated = models.DateTimeField(blank=True, null=True)
+    added = models.DateTimeField(blank=True)
+    updated = models.DateTimeField(blank=True)
     
-    def get_responsibilities(self):
-        if self.profile:
-            return self.responsibility_set.filter(profile__name = self.profile)
-        else:
-            return self.responsibility_set.all()
-
     def __str__(self):
         return self.name
 
@@ -106,11 +92,10 @@ class WorkExperience(models.Model):
 class Responsibility(models.Model):
     description = models.TextField()
     work_experience = models.ForeignKey(WorkExperience)
-    order = models.IntegerField(blank=True, null=True)
-    profile = models.ManyToManyField('ResumeProfile', blank=True)
+    order = models.SmallIntegerField(default=1)
     
-    added = models.DateTimeField(blank=True, null=True)
-    updated = models.DateTimeField(blank=True, null=True)
+    added = models.DateTimeField(blank=True )
+    updated = models.DateTimeField(blank=True)
     
     def __str__(self):
         return self.work_experience.name + ": " + self.description[:50] + "..."
@@ -135,7 +120,6 @@ class Education(models.Model):
     start_date = models.DateField()
     end_date = models.DateField(blank=True)
     location = models.ForeignKey('ContactInfo')
-    profile = models.ManyToManyField('ResumeProfile', blank=True)
     
     added = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
@@ -158,7 +142,6 @@ class CourseWork(models.Model):
     slug = models.SlugField(prepopulate_from=('name',))
     description = models.TextField(blank=True)
     education = models.ForeignKey(Education)
-    profile = models.ManyToManyField('ResumeProfile', blank=True)
         
     added = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
@@ -183,7 +166,6 @@ class ContactInfo(models.Model):
     zipcode = models.IntegerField(maxlength=5, blank=True, null=True)
     country = models.CharField(maxlength=30, blank=True)
     phone = models.CharField(maxlength=30, blank=True)
-    profile = models.ManyToManyField('ResumeProfile', blank=True)
 
     def __str__(self):
         return self.city
@@ -196,7 +178,6 @@ class UserProfile(models.Model):
     address = models.ForeignKey(ContactInfo)
     current_activities = models.TextField()
     bio = models.TextField(blank=True)
-    profile = models.ManyToManyField('ResumeProfile', blank=True)
 
     def __str__(self):
         return "profile: " + self.user.username
@@ -206,6 +187,14 @@ class UserProfile(models.Model):
 
 class ResumeProfile(models.Model):
     name = models.CharField(maxlength=200)
+
+    skill_headings = models.ManyToManyField(SkillHeading)
+    skills = models.ManyToManyField(Skill)
+    projects = models.ManyToManyField(Project)
+    work_experience = models.ManyToManyField(WorkExperience)
+    responsibilities = models.ManyToManyField(Responsibility)
+    education = models.ManyToManyField(Education)
+    course_work = models.ManyToManyField(CourseWork)
 
     def __str__(self):
         return "resume: " + self.name
