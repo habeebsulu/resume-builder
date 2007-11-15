@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 
-urlpatterns = patterns('resume-builder.views',
+urlpatterns = patterns('blog.resume.views',
     (r'^$', 'resume'),
     (r'^pdf/$', 'render_pdf'),
     (r'^pdf/(?P<profile>[a-zA-Z]+)/$', 'render_pdf'),

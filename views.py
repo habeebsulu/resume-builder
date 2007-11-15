@@ -1,10 +1,13 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, Http404, HttpResponsePermanentRedirect
-from models import CourseWork, Education, WorkExperience, Project, Responsibility, SkillHeading, Skill, UserProfile
 from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.conf import settings
-from build_pdf import build_pdf
+
+from externals.build_pdf import build_pdf
+
+from blog.resume.models import CourseWork, Education, WorkExperience, \
+    Project, Responsibility, SkillHeading, Skill, UserProfile
 
 import resume_settings
 import datetime
